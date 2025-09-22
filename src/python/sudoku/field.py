@@ -1,3 +1,5 @@
+from .position import Position
+
 class Field:
 	def __init__(self, field: list[list[int]]=None):
 		if not field:
@@ -44,3 +46,16 @@ class Field:
 				if len(box) != 9:
 					return False
 		return True
+
+	def put_number(self, Position: Position, number: int):
+		self.field[Position.row][Position.col] = number
+	
+	def remove_number(self, Position: Position):
+		self.field[Position.row][Position.col] = 0
+
+	def get_number(self, Position: Position) -> int:
+		return self.field[Position.row][Position.col]
+
+	def get_field(self) -> list[list[int]]:
+		return self.field
+	
