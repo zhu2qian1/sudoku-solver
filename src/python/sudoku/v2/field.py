@@ -32,8 +32,8 @@ class Field:
 
     def put(self, pos: Position, n: int):
         self.__check_pos(pos)
-        if n < 0 or n > self.max_pos:
-            raise ValueError(f"Value must be between 0 and {self.block_size}")
+        if n < 0 or n > self.block_size**2:
+            raise ValueError(f"Value must be between 0 and {self.block_size**2}")
         x = pos.x // self.block_size
         y = pos.y // self.block_size
         bx = pos.x % self.block_size
