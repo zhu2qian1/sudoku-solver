@@ -18,6 +18,18 @@ class Field:
         self.max_pos = block_size * block_size - 1
         self.blocks = blocks
 
+    @staticmethod
+    def create_empty(block_size: int):
+        if block_size <= 0:
+            raise ValueError("Block size must be a positive integer")
+        if block_size == 1:
+            raise ValueError("Block size of 1 is not allowed in Sudoku")
+        blocks = [
+            [Block.create_empty(block_size, Position(x, y)) for x in range(block_size)]
+            for y in range(block_size)
+        ]
+        return Field(block_size, blocks)
+
     def put(self, pos: Position, n: int):
         self.__check_pos(pos)
         if n < 0 or n > self.max_pos:
