@@ -1,5 +1,6 @@
 from sudoku.v2.position import Position
 from sudoku.v2.block import Block
+from sudoku.v2.cell import Cell
 
 
 class Field:
@@ -16,21 +17,17 @@ class Field:
     def put(self, pos: Position, n: int):
         self.__check_pos(pos)
         self.__check_num(n)
-        self.__at_block(
-            Position(pos.x // self.block_size, pos.y // self.block_size)
-        ).at(Position(pos.x % self.block_size, pos.y % self.block_size)).value = n
+        self.at_block(Position(pos.x // self.block_size, pos.y // self.block_size)).at(
+            Position(pos.x % self.block_size, pos.y % self.block_size)
+        ).value = n
 
-    def at(self, pos: Position) -> int:
+    def at(self, pos: Position) -> Cell:
         self.__check_pos(pos)
-        return (
-            self.__at_block(
-                Position(pos.x // self.block_size, pos.y // self.block_size)
-            )
-            .at(Position(pos.x % self.block_size, pos.y % self.block_size))
-            .value
-        )
+        return self.at_block(
+            Position(pos.x // self.block_size, pos.y // self.block_size)
+        ).at(Position(pos.x % self.block_size, pos.y % self.block_size))
 
-    def __at_block(self, pos: Position) -> Block:
+    def at_block(self, pos: Position) -> Block:
         self.__check_pos(pos)
         x = pos.x // self.block_size
         y = pos.y // self.block_size
@@ -66,15 +63,13 @@ class Field:
     @staticmethod
     def create_empty(block_size: int):
         Field.__check_size(block_size)
-        return Field(
-            [
-                [
-                    Block.create_empty(block_size, Position(x, y))
-                    for x in range(block_size)
-                ]
-                for y in range(block_size)
-            ]
-        )
+        blocks = list()
+        for y in range(block_size):
+            row = list()
+            for x in range(block_size):
+                row.append(Block.create_empty(block_size))
+            blocks.append(row)
+        return Field(blocks)
 
     @staticmethod
     def __check_size(size: int):
