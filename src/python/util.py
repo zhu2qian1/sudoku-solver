@@ -1,6 +1,8 @@
 def ordinal(n: int) -> str:
-	if 10 <= n % 100 <= 20:
-		suffix = "th"
-	else:
-		suffix = {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
-	return str(n) + suffix
+    a = abs(n)
+    suffix = (
+        "th"
+        if (a % 100) > 10 and (a % 100) < 14  # special case for 11th, 12th, 13th
+        else {1: "st", 2: "nd", 3: "rd"}.get(a % 10, "th")
+    )
+    return f"{n}{suffix}"

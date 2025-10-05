@@ -1,0 +1,29 @@
+from unittest import TestCase
+import util
+
+class TestUtil(TestCase):
+	def test_ordinal(self):
+		self.assertEqual(util.ordinal(1), "1st")
+		self.assertEqual(util.ordinal(2), "2nd")
+		self.assertEqual(util.ordinal(3), "3rd")
+		self.assertEqual(util.ordinal(4), "4th")
+		self.assertEqual(util.ordinal(10), "10th")
+		self.assertEqual(util.ordinal(11), "11th")
+		self.assertEqual(util.ordinal(12), "12th")
+		self.assertEqual(util.ordinal(13), "13th")
+		self.assertEqual(util.ordinal(21), "21st")
+		self.assertEqual(util.ordinal(22), "22nd")
+		self.assertEqual(util.ordinal(23), "23rd")
+		self.assertEqual(util.ordinal(101), "101st")
+		self.assertEqual(util.ordinal(111), "111th")
+		self.assertEqual(util.ordinal(0), "0th")
+		self.assertEqual(util.ordinal(-1), "-1st")
+		self.assertEqual(util.ordinal(-2), "-2nd")
+		self.assertEqual(util.ordinal(-3), "-3rd")
+		self.assertEqual(util.ordinal(-4), "-4th")
+		self.assertEqual(util.ordinal(-11), "-11th")
+		self.assertEqual(util.ordinal(-21), "-21st")
+		self.assertEqual(util.ordinal(-22), "-22nd")
+		self.assertEqual(util.ordinal(-23), "-23rd")
+		self.assertEqual(util.ordinal(-101), "-101st")
+		self.assertEqual(util.ordinal(-111), "-111th")
