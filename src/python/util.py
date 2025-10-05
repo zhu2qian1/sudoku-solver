@@ -1,4 +1,6 @@
 def ordinal(n: int) -> str:
+    if not isinstance(n, int):
+        raise TypeError("Input must be an integer.")
     a = abs(n)
     suffix = (
         "th"
