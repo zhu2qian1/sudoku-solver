@@ -12,16 +12,28 @@ class Block:
         self.cells = cells
 
     def at(self, pos: Position) -> Cell:
-        Block.__check_position(pos, self.size)
+        self.__check_position(pos)
         return self.cells[pos.y][pos.x]
 
+    def put(self, pos: Position, n: int):
+        self.__check_position(pos)
+        self.__check_num(n)
+        self.cells[pos.y][pos.x].value = n
+
+    def __check_position(self, pos: Position):
+        if self.size <= pos.x or self.size <= pos.y:
+            raise ValueError("Block position out of bounds for the given size")
+
+    def __check_num(self, n: int):
+        if n < 0 or self.size < n:
+            raise ValueError(f"Value must be between 0 and {self.size}")
+
     @staticmethod
-    def create_empty(size: int, pos: Position = Position(0, 0)):
+    def create_empty(size: int):
         Block.__check_size(size)
         return Block(
             size,
-            [[Cell(Position(x, y)) for x in range(size)] for y in range(size)],
-            pos,
+            [[Cell(0) for x in range(size)] for y in range(size)],
         )
 
     @staticmethod
@@ -35,7 +47,3 @@ class Block:
     def __check_cells(cells: list[list[Cell]], size: int):
         if len(cells) != size or any(len(row) != size for row in cells):
             raise ValueError("Cells must be a square matrix of the given size")
-
-    def __check_position(self, pos: Position):
-        if pos.x >= self.size or pos.y >= self.size:
-            raise ValueError("Block position out of bounds for the given size")
