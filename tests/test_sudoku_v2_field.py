@@ -1,11 +1,12 @@
 import unittest
 
 from sudoku.v2.position import Position
+from sudoku.v2.field import Field
 
 
 class TestV2Field(unittest.TestCase):
+
     def test_create_empty(self):
-        from sudoku.v2.field import Field
 
         field = Field.create_empty(3)
 
