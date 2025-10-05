@@ -1,6 +1,7 @@
 {
 	"python.analysis.extraPaths": [
-		"./src/python"
+		"./src/python",
+		"./tests"
 	],
 	"editor.formatOnPaste": true,
 	"editor.formatOnSave": true,
