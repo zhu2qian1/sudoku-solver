@@ -28,10 +28,8 @@ class Field:
         ).at(Position(pos.x % self.block_size, pos.y % self.block_size))
 
     def at_block(self, pos: Position) -> Block:
-        self.__check_pos(pos)
-        x = pos.x // self.block_size
-        y = pos.y // self.block_size
-        return self.blocks[y][x]
+        # pos.x, pos.yはblock座標なのでそのまま使う
+        return self.blocks[pos.y][pos.x]
 
     def __check_pos(self, pos: Position) -> None:
         if self.max_pos < pos.x or self.max_pos < pos.y:
@@ -63,9 +61,10 @@ class Field:
     @staticmethod
     def create_empty(block_size: int):
         Field.__check_size(block_size)
-        blocks = list()
+        # 各Blockが異なるインスタンスになるように明示的に生成
+        blocks = []
         for y in range(block_size):
-            row = list()
+            row = []
             for x in range(block_size):
                 row.append(Block.create_empty(block_size))
             blocks.append(row)
