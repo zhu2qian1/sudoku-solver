@@ -3,50 +3,32 @@ from sudoku.v2.block import Block
 
 
 class Field:
-    def __init__(self, block_size: int, blocks: list[list[Block]]):
-        if block_size <= 0:
-            raise ValueError("Block size must be a positive integer")
-        if blocks:
-            if len(blocks) != block_size or any(
-                len(row) != block_size for row in blocks
-            ):
-                raise ValueError(
-                    "Blocks must be a square matrix of the given block size"
-                )
 
+    def __init__(self, blocks: list[list[Block]]):
+        Field.__check_blocks(blocks)
+
+        block_size = len(blocks)
         self.block_size = block_size
-        self.max_pos = block_size * block_size - 1
+        self.max_pos = block_size**2 - 1
+        self.max_num = block_size**2
         self.blocks = blocks
-
-    @staticmethod
-    def create_empty(block_size: int):
-        if block_size <= 0:
-            raise ValueError("Block size must be a positive integer")
-        if block_size == 1:
-            raise ValueError("Block size of 1 is not allowed in Sudoku")
-        blocks = [
-            [Block.create_empty(block_size, Position(x, y)) for x in range(block_size)]
-            for y in range(block_size)
-        ]
-        return Field(block_size, blocks)
 
     def put(self, pos: Position, n: int):
         self.__check_pos(pos)
-        if n < 0 or n > self.block_size**2:
-            raise ValueError(f"Value must be between 0 and {self.block_size**2}")
-        x = pos.x // self.block_size
-        y = pos.y // self.block_size
-        bx = pos.x % self.block_size
-        by = pos.y % self.block_size
-        self.__at_block(Position(x, y)).at(Position(bx, by)).value = n
+        self.__check_num(n)
+        self.__at_block(
+            Position(pos.x // self.block_size, pos.y // self.block_size)
+        ).at(Position(pos.x % self.block_size, pos.y % self.block_size)).value = n
 
     def at(self, pos: Position) -> int:
         self.__check_pos(pos)
-        x = pos.x // self.block_size
-        y = pos.y // self.block_size
-        bx = pos.x % self.block_size
-        by = pos.y % self.block_size
-        return self.__at_block(Position(x, y)).at(Position(bx, by)).value
+        return (
+            self.__at_block(
+                Position(pos.x // self.block_size, pos.y // self.block_size)
+            )
+            .at(Position(pos.x % self.block_size, pos.y % self.block_size))
+            .value
+        )
 
     def __at_block(self, pos: Position) -> Block:
         self.__check_pos(pos)
@@ -55,8 +37,49 @@ class Field:
         return self.blocks[y][x]
 
     def __check_pos(self, pos: Position) -> None:
-        if pos.x < 0 or pos.y < 0:
-            raise ValueError("Row and column indices must be non-negative")
-        if pos.x > self.max_pos or pos.y > self.max_pos:
+        if self.max_pos < pos.x or self.max_pos < pos.y:
             raise ValueError(f"Position out of bounds for field size {self.max_pos}")
+        return
+
+    def __check_num(self, n: int) -> None:
+        if n < 0 or self.max_num < n:
+            raise ValueError(f"Value must be between 0 and {self.max_num}")
+        return
+
+    @staticmethod
+    def __check_blocks(blocks: list[list[Block]]) -> None:
+        if not blocks:
+            raise ValueError("Blocks cannot be empty")
+        size = len(blocks)
+        for row in blocks:
+            if not row:
+                raise ValueError("Blocks cannot be empty")
+            if len(row) != size:
+                raise ValueError("Blocks must form a square matrix")
+            for block in row:
+                if not block:
+                    raise ValueError("Blocks cannot be empty")
+                if block.size != size:
+                    raise ValueError("All blocks must have the same size as the field")
+        return
+
+    @staticmethod
+    def create_empty(block_size: int):
+        Field.__check_size(block_size)
+        return Field(
+            [
+                [
+                    Block.create_empty(block_size, Position(x, y))
+                    for x in range(block_size)
+                ]
+                for y in range(block_size)
+            ]
+        )
+
+    @staticmethod
+    def __check_size(size: int):
+        if size <= 0:
+            raise ValueError("Size must be a positive integer")
+        if size == 1:
+            raise ValueError("Size of 1x1 block is not allowed in Sudoku")
         return

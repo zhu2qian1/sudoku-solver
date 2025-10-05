@@ -3,14 +3,13 @@ from sudoku.v2.position import Position
 
 
 class Block:
-    def __init__(self, size: int, cells: list[list[Cell]], pos: Position):
+
+    def __init__(self, size: int, cells: list[list[Cell]]):
         Block.__check_size(size)
         Block.__check_cells(cells, size)
-        Block.__check_position(pos, size)
 
         self.size = size
         self.cells = cells
-        self.pos = pos
 
     def at(self, pos: Position) -> Cell:
         Block.__check_position(pos, self.size)
@@ -37,9 +36,6 @@ class Block:
         if len(cells) != size or any(len(row) != size for row in cells):
             raise ValueError("Cells must be a square matrix of the given size")
 
-    @staticmethod
-    def __check_position(pos: Position, size: int):
-        if pos.x < 0 or pos.y < 0:
-            raise ValueError("Block position indices must be non-negative")
-        if pos.x >= size or pos.y >= size:
+    def __check_position(self, pos: Position):
+        if pos.x >= self.size or pos.y >= self.size:
             raise ValueError("Block position out of bounds for the given size")
